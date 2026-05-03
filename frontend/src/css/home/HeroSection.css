@@ -1,0 +1,289 @@
+/* src/css/home/HeroSection.css */
+
+/* 1. 전체 섹션 레이아웃 */
+.HeroSection {
+  position: relative;
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  /* 배경 이미지 전체가 다 보이도록 100% 설정 */
+  background-size: 100% auto; 
+  background-position: top center;
+  background-repeat: no-repeat;
+  background-color: #8ebebb;
+  margin-bottom: -1px;
+  z-index: 10;
+  overflow: hidden;
+}
+
+.HeroSection::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100px;
+  background: linear-gradient(to bottom, transparent 0%, #9ec0be 100%);
+  z-index: 2;
+  pointer-events: none;
+}
+
+.glitch-canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+/* 2. 메인 콘텐츠 컨테이너 */
+.contents {
+  position: relative;
+  z-index: 2;
+  width: 80%;
+  max-width: 1200px;
+  margin-top: 70px;
+  padding: 0 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end; 
+  gap: 20px;
+}
+
+/* 3. 타이틀 영역 */
+.top-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center; 
+  text-align: center;
+  margin-right: -30px; 
+  width: fit-content;
+}
+
+.badge {
+  font-size: 12px;
+  letter-spacing: 2px;
+  color: var(--neon);
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+.top-content h1 {
+  font-size: clamp(48px, 6vw, 90px);
+  color: var(--neon);
+  margin: 0;
+  text-shadow: 0 0 20px rgba(0, 255, 200, 0.25);
+}
+
+.subtitle {
+  color: var(--text-muted);
+  font-size: 16px;
+  margin-top: 5px;
+}
+
+.accent { color: var(--neon); font-weight: bold; }
+
+/* 4. Split UI 업로드 박스 */
+.upload-box.split {
+  width: 590px;
+  min-height: 250px;
+  display: flex;
+  flex-direction: row;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 20px;
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  margin-right: -40px; 
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden; /* 내부 요소가 넘치지 않게 가둠 */
+}
+
+.upload-box.expanded {
+  min-height: 400px; /* 구간 설정창 높이에 맞춰 최적화 */
+}
+
+.split-left, .split-right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* 세로 중앙 정렬 */
+  align-items: center;     /* 가로 중앙 정렬 */
+  padding: 40px 20px;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.split-left { cursor: pointer; transition: background 0.3s; }
+.split-left:hover { background: rgba(255, 255, 255, 0.08); }
+
+.upload-label {
+  width: 100%;             /* 부모(split-left)의 너비를 꽉 채움 */
+  display: flex;
+  flex-direction: column;
+  align-items: center;     /* 내부 아이콘과 텍스트를 가로 중앙으로 */
+  justify-content: center;
+  cursor: pointer;
+}
+
+.icon-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 32px;
+  margin-bottom: 15px;
+  width: 100%;             /* 너비를 확보해서 중앙 정렬 기준을 잡음 */
+}
+
+.vertical-divider {
+  width: 1px;
+  background: rgba(255, 255, 255, 0.2);
+  position: relative;
+}
+
+.vertical-divider span {
+  position: absolute;
+  top: 125px;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #648a89;
+  padding: 4px;
+  border-radius: 50%;
+  font-size: 10px;
+  color: white;
+  z-index: 1;
+}
+
+/* 5. 텍스트 및 입력 요소 */
+.upload-text, .link-title {
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.upload-text, .upload-hint {
+  text-align: center;      /* 텍스트 자체도 중앙 정렬 */
+  width: 100%;
+}
+
+.upload-hint {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.5);
+  margin-top: 4px;
+}
+
+.link-input-group {
+  display: flex;
+  width: 90%; /* 부모 너비에 맞춰 조절 */
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  padding: 4px;
+  margin-top: 15px;
+}
+
+.sns-link-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: white;
+  padding: 8px;
+  font-size: 12px;
+  outline: none;
+  min-width: 0;
+}
+
+.link-submit-btn {
+  background: var(--neon);
+  color: #001531;
+  border: none;
+  border-radius: 7px;
+  padding: 0 12px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* 🔥 6. 구간 설정 UI (이탈 방지 핵심 수정) */
+.trim-settings {
+  width: calc(100% - 20px); /* 패딩값 고려하여 너비 제한 */
+  margin-top: 20px;
+  padding: 15px 10px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 12px;
+  border: 1px dashed rgba(255, 255, 255, 0.2);
+  box-sizing: border-box;
+}
+
+.trim-notice {
+  font-size: 10px;
+  color: #ffcc00;
+  margin-bottom: 12px;
+  text-align: center;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+}
+
+.trim-inputs {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  width: 100%;
+}
+
+.input-field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  flex: 1; /* 가용 공간을 똑같이 나눔 */
+}
+
+.input-field label {
+  font-size: 9px;
+  color: rgba(255, 255, 255, 0.5);
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* 단위 포함 입력창 스타일링 */
+.input-with-unit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  padding: 4px 6px;
+}
+
+.input-with-unit input {
+  width: 45px;
+  background: transparent;
+  border: none;
+  color: white;
+  text-align: center;
+  font-size: 12px;
+  outline: none;
+}
+
+.unit-label {
+  font-size: 10px;
+  color: var(--neon);
+  font-weight: 700;
+}
+
+/* 7. 기타 */
+.scroll-indicator {
+  align-self: flex-end; 
+  margin-right: 255px;
+  margin-top: 10px;
+  font-size: 12px;
+  color: var(--text-muted);
+  animation: float 1.5s infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(6px); }
+}

@@ -1,0 +1,37 @@
+/* src/css/result/ResultContainer.css */
+.ResultContainer {
+  display: flex;
+  min-height: 100vh;
+  background: var(--bg-base); /* 왼쪽 기본 배경 */
+  padding-top: 70px;
+  width: 100%;
+}
+
+.left-section {
+  flex: 1.1;
+  padding: 60px 40px; /* 상단 여백을 60px로 조정 */
+  position: sticky;
+  top: 70px;
+  height: calc(100vh - 70px);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; /* 상단부터 시작 */
+}
+
+.right-section {
+  flex: 0.9;
+  display: flex;
+  flex-direction: column;
+  background: #2c4f52; /* 경계가 확실히 보이도록 더 어두운 톤으로 분리 */
+  padding: 60px 50px; /* 왼쪽과 시작 높이(60px)를 맞추고 좌우 패딩 추가 */
+  min-height: calc(100vh - 70px);
+}
+
+.loading-state {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--bg-dark);
+  font-weight: bold;
+}

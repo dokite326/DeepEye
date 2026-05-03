@@ -1,0 +1,6 @@
+.Footer {
+  padding: 10px;
+  background: rgb(4, 15, 25);  
+  text-align: center;
+  color: var(--text-muted);
+}

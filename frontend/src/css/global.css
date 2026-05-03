@@ -1,0 +1,63 @@
+/* ===============================
+   🎨 Color System
+=============================== */
+:root {
+  --bg-base: #8ebebb;   /* 🔥 여기 변경 */
+  --bg-mid: #5f8f94;    /* 🔥 자연스럽게 이어지게 */
+  --bg-dark: #2c4f52;
+
+  --bg-card: rgba(4, 18, 30, 0.6);
+
+  --neon: #00ffc8;
+  --text-main: #e8f5f2;
+  --text-muted: rgba(210,240,235,0.6);
+
+  --border-glass: rgba(0,255,200,0.2);
+}
+
+
+/* ===============================
+   🧱 Reset & Base
+=============================== */
+* {
+  box-sizing: border-box;   /* 🔥 width 튀어나오는 문제 방지 */
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: linear-gradient(
+    180deg,
+    var(--bg-base) 0%,
+    var(--bg-mid) 60%,
+    var(--bg-dark) 100%
+  );
+  color: var(--text-main);
+  font-family: 'DM Sans', sans-serif;
+
+  overflow-x: hidden;   /* 🔥 가로 스크롤 방지 */
+}
+
+
+/* ===============================
+   🔗 기본 요소 스타일
+=============================== */
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+button {
+  font-family: inherit;
+}
+
+
+/* ===============================
+   ✨ 스크롤 부드럽게
+=============================== */
+html {
+  scroll-behavior: smooth;
+}

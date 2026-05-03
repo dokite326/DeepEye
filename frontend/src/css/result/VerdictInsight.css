@@ -1,0 +1,61 @@
+/* src/css/result/VerdictInsight.css */
+.VerdictInsight {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: 40px;
+}
+
+.llm-chat-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.chat-window {
+  flex: 1;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  /* 채팅창 자체 스크롤 */
+  max-height: 700px; 
+  overflow-y: auto;
+}
+
+.bubble {
+  max-width: 85%;
+  padding: 14px 18px;
+  border-radius: 18px;
+  font-size: 14.5px;
+  line-height: 1.5;
+}
+
+.bubble.ai { background: rgba(255,255,255,0.1); color: #fff; align-self: flex-start; }
+.bubble.user { background: var(--neon); color: #000; align-self: flex-end; font-weight: 600; }
+
+.input-group {
+  padding: 25px;
+  background: rgba(0, 0, 0, 0.1);
+  display: flex;
+  gap: 12px;
+}
+
+.input-group input {
+  flex: 1;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 12px;
+  color: #fff;
+  padding: 14px;
+  outline: none;
+}
+
+.input-group button {
+  background: var(--neon);
+  border: none;
+  padding: 0 25px;
+  border-radius: 12px;
+  font-weight: bold;
+  cursor: pointer;
+}

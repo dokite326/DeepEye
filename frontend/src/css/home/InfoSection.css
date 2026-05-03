@@ -1,0 +1,145 @@
+/* src/css/home/InfoSection.css */
+
+.InfoSection {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  background-size: cover;
+  background-position: center;
+  z-index: 5;
+  overflow: hidden;
+}
+
+/* 상단 블렌딩 유지 */
+.InfoSection::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 350px;
+  background: linear-gradient(
+    to bottom, 
+    #9ec0be 0%, 
+    rgba(152, 182, 181, 0.4) 50%,
+    transparent 100%
+  );
+  z-index: 1;
+  pointer-events: none;
+}
+
+.Bottom-inner {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 100px 60px 100px 60px;
+}
+
+/* 🏷️ 헤더 가독성 강화 */
+.info-header {
+  margin-bottom: 60px;
+  border-left: 4px solid var(--neon);
+  padding-left: 24px;
+}
+
+.info-header h2 {
+  font-size: clamp(32px, 4vw, 42px);
+  color: #ffffff;
+  /* 밝은 배경에서도 잘 보이도록 그림자 추가 */
+  text-shadow: 0 2px 15px rgba(0, 0, 0, 0.3);
+  font-weight: 700;
+  letter-spacing: -1px;
+}
+
+/* 📦 카드 컨테이너 */
+.card-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 35px;
+}
+
+/* 🃏 유리 카드 가독성 집중 튜닝 */
+.info-card {
+  /* 🔥 배경 농도를 살짝 높여 글자 대비 확보 */
+  background: rgba(10, 30, 35, 0.25); 
+  /* 🔥 블러 수치를 높여 배경 그래픽을 더 확실히 뭉갬 */
+  backdrop-filter: blur(25px); 
+  -webkit-backdrop-filter: blur(25px);
+  
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 24px;
+  padding: 45px 35px;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.4s ease;
+  /* 은은한 그림자로 입체감 부여 */
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.info-card:hover {
+  background: rgba(10, 30, 35, 0.4);
+  border-color: var(--neon);
+  transform: translateY(-8px);
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+}
+
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.card-icon { font-size: 36px; }
+
+.card-no {
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+  font-size: 14px;
+  color: var(--neon);
+  font-weight: 700;
+}
+
+.info-card h3 {
+  color: #ffffff;
+  font-size: 24px;
+  font-weight: 800;
+  margin-bottom: 18px;
+  /* 제목 가독성용 그림자 */
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.info-card p {
+  /* 🔥 본문 색상을 조금 더 밝게 조정 */
+  color: rgba(255, 255, 255, 0.85); 
+  line-height: 1.75;
+  font-size: 16px;
+  margin-bottom: 24px;
+  word-break: keep-all;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+.info-card p strong {
+  /* 강조 텍스트에 포인트 컬러 부여 */
+  color: #00ffc8; 
+  font-weight: 600;
+}
+
+.card-footer {
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: var(--neon);
+  font-weight: 600;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 18px;
+  margin-top: auto;
+}
+
+/* InfoSection.css 하단에 추가 추천 */
+.info-badge {
+  display: inline-block;
+  font-size: 12px;
+  letter-spacing: 2px;
+  color: var(--neon);
+  font-weight: 700;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+}

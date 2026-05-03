@@ -1,0 +1,49 @@
+/* src/css/result/LimeVisualizer.css */
+.LimeVisualizer {
+  width: 100%;
+  max-width: 1000px; /* 대기업 대시보드 표준 너비 */
+  display: flex;
+  flex-direction: column;
+}
+
+.visual-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.media-box {
+  width: 100%;
+  height: 50vh; /* 화면의 절반 높이 고정 */
+  background: #000;
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+  border: 1px solid rgba(255,255,255,0.1);
+  overflow: hidden;
+}
+
+.media-box img, .media-box video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* 가로로 늘어나는 것 방지 */
+}
+
+.explanation-box {
+  padding: 5px 10px;
+}
+
+.explanation-box .badge {
+  font-size: 11px;
+  color: var(--neon);
+  font-weight: 800;
+  margin-bottom: 5px;
+  display: block;
+}
+
+.explanation-box p {
+  font-size: 13.5px;
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.6;
+  border-left: 3px solid var(--neon);
+  padding-left: 15px;
+}
