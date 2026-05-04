@@ -2,6 +2,9 @@ import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom"; 
 
+// API 호출 함수 임포트
+import { predictImage, predictLink } from "../../api";
+
 // 스타일 및 자산
 import "../../css/home/HeroSection.css"; 
 import bg from "../../assets/bg.png";
@@ -16,6 +19,10 @@ export default function HeroSection() {
   const [snsLink, setSnsLink] = useState("");
   const [isLongVideo, setIsLongVideo] = useState(false);
   const [trimRange, setTrimRange] = useState({ start: "00:00", end: "03:00" });
+  
+  // ✅ 분석 상태 및 진행률 관리
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [progress, setProgress] = useState(0);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -55,6 +62,18 @@ export default function HeroSection() {
     };
   }, []);
 
+  // ✅ 진행률 시뮬레이션 함수
+  const startProgressSimulation = () => {
+    setProgress(0);
+    return setInterval(() => {
+      setProgress((prev) => {
+        if (prev >= 95) return 95; // 실제 응답 전까지 95%에서 대기
+        const increment = Math.random() * 7; // 무작위 증가로 생동감 부여
+        return Math.min(prev + increment, 95);
+      });
+    }, 600);
+  };
+
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) processFile(file);
@@ -67,40 +86,57 @@ export default function HeroSection() {
     if (file) processFile(file);
   };
 
-  const processFile = (file) => {
+  const processFile = async (file) => {
     const isImage = file.type.startsWith("image/");
     const isVideo = file.type.startsWith("video/");
 
-    if (isImage) {
-      setFileName(file.name);
-      moveToResult("image", file);
-    } else if (isVideo) {
+    if (!isImage && !isVideo) {
+      alert("이미지 또는 영상 파일만 업로드 가능합니다.");
+      return;
+    }
+
+    if (isVideo) {
       const video = document.createElement('video');
       video.preload = 'metadata';
-      video.onloadedmetadata = () => {
+      video.onloadedmetadata = async () => {
         window.URL.revokeObjectURL(video.src);
         if (video.duration > 180) {
           alert("⚠️ 업로드 실패: 3분을 초과하는 영상은 분석할 수 없습니다.");
           setFileName("");
         } else {
           setFileName(file.name);
-          moveToResult("video", file);
+          await uploadAndAnalyze(file);
         }
       };
       video.src = URL.createObjectURL(file);
     } else {
-      alert("이미지 또는 영상 파일만 업로드 가능합니다.");
+      setFileName(file.name);
+      await uploadAndAnalyze(file);
     }
   };
 
-  const moveToResult = (type, fileData) => {
-    navigate("/result", { 
-      state: { 
-        type: type, 
-        file: fileData, 
-        name: fileData.name 
-      } 
-    });
+  const uploadAndAnalyze = async (file) => {
+    setIsAnalyzing(true); 
+    const timer = startProgressSimulation();
+    
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const response = await predictImage(formData);
+      if (response && response.data) {
+        clearInterval(timer);
+        setProgress(100); // 응답 성공 시 100% 점프
+        setTimeout(() => {
+          navigate("/result", { state: response.data });
+        }, 600);
+      }
+    } catch (error) {
+      clearInterval(timer);
+      console.error("Analysis Error:", error);
+      alert("서버 연결에 실패했거나 분석 중 오류가 발생했습니다.");
+      setIsAnalyzing(false);
+    }
   };
 
   const handleLinkChange = (e) => {
@@ -113,23 +149,54 @@ export default function HeroSection() {
     }
   };
 
-  const handleSnsSubmit = () => {
+  const handleSnsSubmit = async () => {
     if (!snsLink) {
       alert("Please paste a valid link.");
       return;
     }
-    if (isLongVideo && (!trimRange.start || !trimRange.end)) {
-      alert("분석할 구간을 설정해주세요.");
+
+    const parseTimeToSeconds = (timeStr) => {
+      if (!timeStr || !timeStr.includes(':')) return 0;
+      const [min, sec] = timeStr.split(':').map(Number);
+      return (min || 0) * 60 + (sec || 0);
+    };
+
+    const startSec = parseTimeToSeconds(trimRange.start);
+    const endSec = parseTimeToSeconds(trimRange.end);
+
+    if (startSec >= endSec) {
+      alert("❌ 시작 시간은 종료 시간보다 빨라야 합니다. 구간 설정을 확인해 주세요!");
       return;
     }
-    navigate("/result", { 
-      state: { 
-        type: "link", 
-        url: snsLink,
-        isTrimmed: isLongVideo,
-        range: isLongVideo ? trimRange : { start: "00:00", end: "03:00" }
-      } 
-    });
+
+    if (endSec - startSec > 180) {
+      alert("❌ 분석 가능한 최대 구간은 3분입니다. 종료 시간을 줄여주세요.");
+      return;
+    }
+
+    setIsAnalyzing(true); 
+    const timer = startProgressSimulation();
+
+    try {
+      const response = await predictLink({ 
+        url: snsLink, 
+        startTime: startSec,
+        duration: endSec - startSec 
+      });
+      
+      if (response && response.data) {
+        clearInterval(timer);
+        setProgress(100);
+        setTimeout(() => {
+          navigate("/result", { state: response.data });
+        }, 600);
+      }
+    } catch (error) {
+      clearInterval(timer);
+      console.error("Link Analysis Error:", error);
+      alert("링크를 분석하는 중 오류가 발생했습니다. 서버 상태를 확인해 주세요.");
+      setIsAnalyzing(false);
+    }
   };
 
   return (
@@ -142,7 +209,58 @@ export default function HeroSection() {
     >
       <canvas ref={canvasRef} className="glitch-canvas" />
 
-      {/* ✅ 중요 1: .contents 클래스는 디자인 유지에 필수입니다. 그대로 두세요! */}
+      {/* ✅ 원형 로딩바 및 퍼센트 오버레이 */}
+      <AnimatePresence>
+        {isAnalyzing && (
+          <motion.div 
+            className="loading-overlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            style={{
+              position: 'fixed', top:0, left:0, width:'100%', height:'100%',
+              background: 'rgba(0,0,0,0.9)', zIndex: 9999,
+              display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center'
+            }}
+          >
+            {/* 원형 프로그레스 바 */}
+            <div className="progress-wrapper" style={{ position: 'relative', width: '140px', height: '140px' }}>
+                <svg viewBox="0 0 100 100" style={{ transform: 'rotate(-90deg)', width: '100%', height: '100%' }}>
+                    <circle 
+                        cx="50" cy="50" r="45" 
+                        fill="transparent" stroke="rgba(255,255,255,0.1)" strokeWidth="6" 
+                    />
+                    <motion.circle 
+                        cx="50" cy="50" r="45" 
+                        fill="transparent" stroke="#00ffc8" strokeWidth="6" 
+                        strokeDasharray="283"
+                        animate={{ strokeDashoffset: 283 - (283 * progress) / 100 }}
+                        transition={{ duration: 0.4, ease: "easeOut" }}
+                        strokeLinecap="round"
+                    />
+                </svg>
+                <div style={{
+                    position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
+                    color: '#00ffc8', fontSize: '1.5rem', fontWeight: 'bold', fontFamily: 'monospace'
+                }}>
+                    {Math.round(progress)}%
+                </div>
+            </div>
+
+            <motion.p 
+                animate={{ opacity: [0.4, 1, 0.4] }}
+                transition={{ repeat: Infinity, duration: 1.5 }}
+                style={{ color: '#00ffc8', marginTop: '30px', fontWeight: 'bold', letterSpacing: '3px', fontSize: '1.1rem' }}
+            >
+              AI IS ANALYZING THE MEDIA
+            </motion.p>
+            <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '0.85rem', marginTop: '10px' }}>
+              LIME 분석 결과를 생성하고 있습니다. 잠시만 기다려주세요.
+            </p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <div className="contents">
         <motion.div
           className="top-content"
@@ -158,7 +276,6 @@ export default function HeroSection() {
           </p>
         </motion.div>
 
-        {/* ✅ 중요 2: 클래스명에 'expanded'가 붙어야 긴 영상 설정 UI가 예쁘게 나옵니다. */}
         <motion.div
           className={`upload-box split ${dragOver ? "drag-active" : ""} ${isLongVideo ? "expanded" : ""}`}
           initial={{ opacity: 0, y: 60 }}
@@ -182,6 +299,7 @@ export default function HeroSection() {
               accept="image/*,video/*"
               onChange={handleFileChange}
               hidden
+              disabled={isAnalyzing}
             />
           </div>
 
@@ -198,9 +316,16 @@ export default function HeroSection() {
                 className="sns-link-input"
                 value={snsLink}
                 onChange={handleLinkChange}
+                disabled={isAnalyzing}
                 onKeyPress={(e) => e.key === 'Enter' && handleSnsSubmit()}
               />
-              <button className="link-submit-btn" onClick={handleSnsSubmit}>Go</button>
+              <button 
+                className="link-submit-btn" 
+                onClick={handleSnsSubmit}
+                disabled={isAnalyzing}
+              >
+                Go
+              </button>
             </div>
 
             <AnimatePresence>
@@ -213,7 +338,6 @@ export default function HeroSection() {
                 >
                   <p className="trim-notice">⚠️ Long video: Set analysis range (Max 3min)</p>
                   <div className="trim-inputs">
-                    {/* ✅ 중요 3: CSS의 .input-with-unit 구조와 맞게 input-field 클래스 수정 */}
                     <div className="input-field">
                       <label>Start (mm:ss)</label>
                       <div className="input-with-unit">

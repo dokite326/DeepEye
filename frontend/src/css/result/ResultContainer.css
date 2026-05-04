@@ -1,30 +1,42 @@
 /* src/css/result/ResultContainer.css */
+
 .ResultContainer {
   display: flex;
   min-height: 100vh;
-  background: var(--bg-base); /* 왼쪽 기본 배경 */
-  padding-top: 70px;
+  background: var(--bg-base); 
+  /* 헤더 높이만큼만 띄워줍니다 */
+  padding-top: 70px; 
   width: 100%;
+  box-sizing: border-box;
+  /* 💡 자식 요소들이 위에서부터 시작하도록 설정 */
+  align-items: flex-start; 
 }
 
 .left-section {
   flex: 1.1;
-  padding: 60px 40px; /* 상단 여백을 60px로 조정 */
+  /* 💡 기존 60px에서 상단 패딩을 대폭 줄여 위로 붙임 */
+  padding: 20px 40px; 
   position: sticky;
   top: 70px;
   height: calc(100vh - 70px);
   display: flex;
   flex-direction: column;
-  justify-content: flex-start; /* 상단부터 시작 */
+  justify-content: flex-start;
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  box-sizing: border-box;
 }
 
 .right-section {
   flex: 0.9;
   display: flex;
   flex-direction: column;
-  background: #2c4f52; /* 경계가 확실히 보이도록 더 어두운 톤으로 분리 */
-  padding: 60px 50px; /* 왼쪽과 시작 높이(60px)를 맞추고 좌우 패딩 추가 */
+  background: #2c4f52; 
+  /* 💡 상단 패딩(60px -> 20px)을 줄여 REAL 텍스트를 위로 끌어올림 */
+  padding: 20px 50px; 
   min-height: calc(100vh - 70px);
+  box-sizing: border-box;
+  /* 💡 콘텐츠가 위에서부터 차곡차곡 쌓이도록 정렬 */
+  justify-content: flex-start; 
 }
 
 .loading-state {
@@ -32,6 +44,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  color: var(--bg-dark);
+  color: #fff;
   font-weight: bold;
 }
