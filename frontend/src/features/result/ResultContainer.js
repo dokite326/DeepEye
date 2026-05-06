@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import LimeVisualizer from './LimeVisualizer';
 import VerdictInsight from './VerdictInsight';
-import Footer from '../../components/Layout/Footer'; 
 
 import "../../css/result/ResultContainer.css";
 
@@ -50,7 +49,6 @@ export default function ResultContainer() {
                     <VerdictInsight data={data} />
                 </div>
             </div>
-            <Footer />
         </div>
     );
 }
